@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Másodfoku megoldó képlet</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #0066cc;
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: normal;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .content-box {
+            background: white;
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            color: #0066cc;
+            font-size: 1.3em;
+            margin: 0 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0066cc;
+        }
+        .formula-box {
+            background-color: #e6f2ff;
+            border-left: 4px solid #0066cc;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 1.2em;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-label {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .input-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .input-col {
+            flex: 1;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 1em;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+        .equation-display {
+            background-color: #f9f9f9;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin: 20px 0;
+        }
+        .solve-button {
+            background-color: #0066cc;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 3px;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        .solve-button:hover {
+            background-color: #0052a3;
+        }
+        .result-panel {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 3px;
+            min-height: 50px;
+        }
+        .result-success {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            color: #155724;
+        }
+        .result-info {
+            background-color: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            color: #0c5460;
+        }
+        .result-complex {
+            background-color: #e2e3e5;
+            border-left: 4px solid #6c757d;
+            color: #383d41;
+        }
+        .result-error {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            color: #721c24;
+        }
+        .result-title {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .solution-value {
+            font-size: 1.3em;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .discriminant-info {
+            margin-top: 15px;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Másodfokúmegoldó képlet</h1>
+        <p>Normál alakja ax² + bx + c = 0</p>
+    </div>
+
+    <div class="container">
+        <div class="content-box">
+            <h2 class="section-title">Másodfokúmegoldó képlet</h2>
+            <div class="formula-box">
+                x = (-b ± √(b² - 4ac)) / 2a
+            </div>
+            <p>A másodfokú megoldó képlettet a másodfokú egyenletel megoldására (gyök keresésére) használjuk.</p>
+        </div>
+
+        <div class="content-box">
+            <h2 class="section-title">Írja be az együthatókat</h2>
+            
+            <div class="equation-display" id="equationDisplay">
+                Enter coefficients below
+            </div>
+
+            <div class="input-row">
+                <div class="input-col">
+                    <label class="input-label">Együtható a (x²)</label>
+                    <input type="number" id="coeffA" value="1" step="any">
+                </div>
+                <div class="input-col">
+                    <label class="input-label">Együtható b (x)</label>
+                    <input type="number" id="coeffB" value="-3" step="any">
+                </div>
+                <div class="input-col">
+                    <label class="input-label">Konstans c</label>
+                    <input type="number" id="coeffC" value="2" step="any">
+                </div>
+            </div>
+
+            <button class="solve-button" onclick="solve()">Kiszámítás</button>
+
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Update equation display when inputs change
+        document.getElementById('coeffA').addEventListener('input', updateEquation);
+        document.getElementById('coeffB').addEventListener('input', updateEquation);
+        document.getElementById('coeffC').addEventListener('input', updateEquation);
+
+        function updateEquation() {
+            const a = document.getElementById('coeffA').value || '0';
+            const b = document.getElementById('coeffB').value || '0';
+            const c = document.getElementById('coeffC').value || '0';
+            
+            const bSign = parseFloat(b) >= 0 ? ' + ' : ' ';
+            const cSign = parseFloat(c) >= 0 ? ' + ' : ' ';
+            
+            document.getElementById('equationDisplay').textContent = 
+                `${a}x² ${bSign}${b}x ${cSign}${c} = 0`;
+        }
+
+        function solve() {
+            const a = parseFloat(document.getElementById('coeffA').value);
+            const b = parseFloat(document.getElementById('coeffB').value);
+            const c = parseFloat(document.getElementById('coeffC').value);
+            const resultDiv = document.getElementById('result');
+
+            // Validate inputs
+            if (isNaN(a) || isNaN(b) || isNaN(c)) {
+                resultDiv.innerHTML = `
+                    <div class="result-panel result-error">
+                        <div class="result-title">Error</div>
+                        <p>Adjon meg érvényes értékeket.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (a === 0) {
+                resultDiv.innerHTML = `
+                    <div class="result-panel result-error">
+                        <div class="result-title">Error</div>
+                        <p>Az "a" együtható nem lehet 0, mert 0-val nem osztunk.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Calculate discriminant
+            const discriminant = b * b - 4 * a * c;
+
+            // Solve based on discriminant
+            if (discriminant > 0) {
+                const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+                const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+                resultDiv.innerHTML = `
+                    <div class="result-panel result-success">
+                        <div class="result-title">Két valós megoldás</div>
+                        <div class="solution-value">x₁ = ${x1.toFixed(6)}</div>
+                        <div class="solution-value">x₂ = ${x2.toFixed(6)}</div>
+                        <div class="discriminant-info">Diszkrimináns: ${discriminant.toFixed(6)} (pozitív - 2 valós megoldás)</div>
+                    </div>
+                `;
+            } else if (discriminant === 0) {
+                const x = -b / (2 * a);
+                resultDiv.innerHTML = `
+                    <div class="result-panel result-info">
+                        <div class="result-title">Egy vlós megoldás (ismétlődő gyök)</div>
+                        <div class="solution-value">x = ${x.toFixed(6)}</div>
+                        <div class="discriminant-info">Diszkrimináns: 0 (a parabola az x tengely egy helyen metszi)</div>
+                    </div>
+                `;
+            } else {
+                const realPart = (-b / (2 * a)).toFixed(6);
+                const imagPart = (Math.sqrt(-discriminant) / (2 * a)).toFixed(6);
+                resultDiv.innerHTML = `
+                    <div class="result-panel result-complex">
+                        <div class="result-title">Két valós megoldás van</div>
+                        <div class="solution-value">x₁ = ${realPart} + ${imagPart}i</div>
+                        <div class="solution-value">x₂ = ${realPart} - ${imagPart}i</div>
+                        <div class="discriminant-info">Diszkrimináns: ${discriminant.toFixed(6)} (negatív - nincs valós megoldás)</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize equation display
+        updateEquation();
+        // Calculate with default values
+        solve();
+    </script>
+</body>
+</html>
